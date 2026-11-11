@@ -9,6 +9,11 @@
   <body>
     <div class="todo-form">
       <h3>Nhung viec can lam</h3>
+      <div class="status">
+        <button type="button" id="filterAll" class="active">Tất cả</button>
+        <button type="button" id="filterActive">Đang làm</button>
+        <button type="button" id="filterCompleted">Đã xong</button>
+      </div>
       <div class="input-button">
         <input type="text" id="taskInput" placeholder="them viec moi" />
         <button id="addTaskButton">Them</button>
@@ -18,64 +23,200 @@
     </div>
   </body>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      /* background-color: rgb(216, 196, 251); */
-    }
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #eee7ff, #eaf1ff);
+    color: #292b3d;
+    font-family: Arial, sans-serif;
+  }
+
+  .todo-form {
+    display: flex;
+    flex-direction: column;
+    width: min(440px, 100%);
+    max-height: 90vh;
+    padding: 26px;
+    overflow: hidden;
+    background-color: #fff;
+    border: 1px solid #f0eff7;
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgb(44 38 79 / 12%);
+  }
+
+  .todo-form h3 {
+    margin: 0 0 18px;
+    color: #292b3d;
+    font-size: 25px;
+  }
+
+  .status {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .status button {
+    flex: 1;
+    padding: 9px 6px;
+    border: 1px solid #e5e6ef;
+    border-radius: 8px;
+    background: #fff;
+    color: #686c80;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .status button:hover {
+    background: #f5f5ff;
+  }
+
+  .status button.active {
+    border-color: #6569ef;
+    background: #6569ef;
+    color: #fff;
+  }
+
+  .input-button {
+    display: flex;
+    gap: 9px;
+  }
+
+  #taskInput {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid #dedfeb;
+    border-radius: 9px;
+    outline: none;
+    font-size: 14px;
+  }
+
+  #taskInput:focus {
+    border-color: #7779f4;
+    box-shadow: 0 0 0 3px rgb(101 105 239 / 14%);
+  }
+
+  #addTaskButton {
+    padding: 0 17px;
+    border: 0;
+    border-radius: 9px;
+    background: #6569ef;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  #addTaskButton:hover {
+    background: #5358dc;
+  }
+
+  .today {
+    margin: 22px 0 10px;
+    color: #9296a8;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  #taskList {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-height: 0;
+    margin: 0;
+    padding: 0 4px 0 0;
+    overflow-y: auto;
+    list-style: none;
+  }
+
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 12px 13px;
+    border: 1px solid #ececf3;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 14px;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+
+  .task-item:hover {
+    border-color: #d9daf2;
+    background: #fcfcff;
+  }
+
+  /* JavaScript appends span, checkbox, button.
+     These rules display checkbox first and delete button last. */
+  .task-item input[type="checkbox"] {
+    order: 0;
+    width: 17px;
+    height: 17px;
+    flex: 0 0 auto;
+    margin: 0;
+    accent-color: #6569ef;
+    cursor: pointer;
+  }
+
+  .task-item span {
+    order: 1;
+    flex: 1;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+  }
+
+  .task-item button {
+    order: 2;
+    flex: 0 0 auto;
+    padding: 6px 9px;
+    border: 0;
+    border-radius: 7px;
+    background: #fff0f0;
+    color: #bd4c58;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .task-item button:hover {
+    background: #ffe1e3;
+  }
+
+  #taskList::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  #taskList::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #d9daea;
+  }
+
+  @media (max-width: 480px) {
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: rgb(233, 218, 249);
+      padding: 12px;
     }
+
     .todo-form {
-      background-color: #ffffff;
+      max-height: 94vh;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 300px;
-      height: 90%;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      h3 {
-        font-size: 20px;
-        margin-bottom: 10px;
-      }
-      p {
-        margin-top: 10px;
-        font-size: 10px;
-        margin-bottom: 10px;
-      }
-      #taskList {
-        list-style: none;
-        margin-top: 16px;
-        min-height: 0;
-        overflow-y: auto;
-      }
-
-      .task-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px;
-        border: 1px solid #eceef4;
-        border-radius: 10px;
-        font-size: 14px;
-      }
-
-      .task-item label {
-        flex: 1;
-      }
-
-      .more-button {
-        border: none;
-        background: transparent;
-        cursor: pointer;
-      }
+      border-radius: 15px;
     }
-  </style>
+
+    .todo-form h3 {
+      font-size: 22px;
+    }
+  }
+</style>
 </html>
